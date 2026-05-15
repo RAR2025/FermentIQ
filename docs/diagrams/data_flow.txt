@@ -1,0 +1,44 @@
+DATA FLOW DIAGRAM — FERMENTIQ
+
+USER CLICKS "Run Simulation"
+	 │
+	 ▼
+Streamlit → GET /api/simulate/
+	 │
+	 ▼
+Django: FermentationSimulator.get_ideal_signatures()
+	 │  generates 3 × 72-point ideal curves
+	 ▼
+Django: FermentationSimulator.generate_all_tanks(N)
+	 │  generates N × 3 × 72 readings with injected faults
+	 ▼
+Django: Saves to DB (IdealSignature, TankReading tables)
+	 │
+	 ▼
+Returns JSON → Streamlit renders raw data
+
+USER CLICKS "Analyze"
+	 │
+	 ▼
+Streamlit → GET /api/analyze/
+	 │
+	 ▼
+Django: Loads IdealSignature + TankReading from DB
+	 │
+	 ▼
+Django: For each (tank × sensor):
+	FermentationAnomalyEngine.analyze_tank()
+	→ tolerance band comparison
+	→ similarity_score (%)
+	→ first_deviation_index
+	→ status: perfect/acceptable/concerning/failed
+	 │
+	 ▼
+Django: Saves AnalysisResult to DB
+	 │
+	 ▼
+Returns JSON → Streamlit renders:
+	- Tank cards with status badges
+	- Sensor charts (ideal vs actual + band)
+	- Alert banners for failing tanks
+	- Results table

@@ -1,0 +1,39 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                    FERMENTIQ SYSTEM ARCHITECTURE                    ║
+╠══════════════════════════════════════════════════════════════════════╣
+║                                                                      ║
+║   ┌─────────────────┐         ┌──────────────────────────────────┐  ║
+║   │   STREAMLIT     │  HTTP   │         DJANGO REST API          │  ║
+║   │   DASHBOARD     │◄───────►│                                  │  ║
+║   │  (Port 8501)    │  JSON   │  /api/simulate/  (GET)           │  ║
+║   │                 │         │  /api/analyze/   (GET)           │  ║
+║   │  - Tank Cards   │         │  /api/results/   (GET)           │  ║
+║   │  - Plotly Charts│         │  /api/health/    (GET)           │  ║
+║   │  - Alert Banners│         │                                  │  ║
+║   └─────────────────┘         └──────────┬───────────────────────┘  ║
+║                                          │                           ║
+║                          ┌───────────────▼──────────────────────┐   ║
+║                          │           CORE SERVICES              │   ║
+║                          │                                      │   ║
+║                          │  ┌─────────────────────────────────┐ │   ║
+║                          │  │  FermentationSimulator          │ │   ║
+║                          │  │  - Generates ideal signatures   │ │   ║
+║                          │  │  - Injects fault types          │ │   ║
+║                          │  │  - 3 sensors × N tanks          │ │   ║
+║                          │  └────────────────┬────────────────┘ │   ║
+║                          │                   │                   │   ║
+║                          │  ┌────────────────▼────────────────┐ │   ║
+║                          │  │  FermentationAnomalyEngine      │ │   ║
+║                          │  │  - Tolerance band matching      │ │   ║
+║                          │  │  - Similarity score (0–100%)    │ │   ║
+║                          │  │  - First deviation detection    │ │   ║
+║                          │  │  - Status classification        │ │   ║
+║                          │  └────────────────┬────────────────┘ │   ║
+║                          └───────────────────┼──────────────────┘   ║
+║                                              │                       ║
+║                          ┌───────────────────▼──────────────────┐   ║
+║                          │           SQLITE DATABASE            │   ║
+║                          │  IdealSignature | TankReading        │   ║
+║                          │  AnalysisResult                      │   ║
+║                          └──────────────────────────────────────┘   ║
+╚══════════════════════════════════════════════════════════════════════╝

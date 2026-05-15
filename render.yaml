@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: fermentiq-backend
+    env: python
+    buildCommand: "cd backend && pip install -r requirements.txt && python manage.py migrate --run-syncdb && python manage.py collectstatic --noinput"
+    startCommand: "cd backend && gunicorn fermentiq_backend.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.14.2"
+
+  - type: web
+    name: fermentiq-dashboard
+    env: python
+    buildCommand: "cd dashboard && pip install -r requirements.txt"
+    startCommand: "cd dashboard && streamlit run app.py --server.port $PORT --server.address 0.0.0.0"
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          name: fermentiq-backend
+          type: web
+          property: url

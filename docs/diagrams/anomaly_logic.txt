@@ -1,0 +1,38 @@
+ANOMALY DETECTION DECISION TREE
+
+For each reading point i (i = 0 to S-1):
+	  │
+	  ▼
+  ideal[i] = reference value
+  margin  = |ideal[i]| × (tolerance% / 100)
+  lower   = ideal[i] - margin
+  upper   = ideal[i] + margin
+	  │
+	  ▼
+  Is lower ≤ reading[i] ≤ upper?
+	/         \
+     YES          NO
+      │            │
+  in_band[i]=True  in_band[i]=False
+		     │
+		     ▼
+	  First occurrence?
+		/       \
+	     YES        NO
+	      │          │
+     Record as        Add to
+     first_deviation   deviation_details
+
+After all S points:
+	  │
+	  ▼
+  similarity_score = (sum(in_band) / S) × 100
+
+	  │
+	  ▼
+  ┌──────────────────────────────────────┐
+  │  Score ≥ 95%  → STATUS: PERFECT  ✅  │
+  │  Score ≥ 80%  → STATUS: ACCEPTABLE 🟢│
+  │  Score ≥ 60%  → STATUS: CONCERNING 🟡│
+  │  Score < 60%  → STATUS: FAILED    🔴 │
+  └──────────────────────────────────────┘
