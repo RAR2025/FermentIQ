@@ -19,7 +19,4 @@ services:
     startCommand: "cd dashboard && streamlit run app.py --server.port $PORT --server.address 0.0.0.0"
     envVars:
       - key: BACKEND_URL
-        fromService:
-          name: fermentiq-backend
-          type: web
-          property: url
+        value: "https://fermentiq-backend.onrender.com"
