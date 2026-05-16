@@ -10,13 +10,7 @@ services:
       - key: DEBUG
         value: "False"
       - key: PYTHON_VERSION
-        value: "3.14.2"
+        value: "3.11"
 
-  - type: web
-    name: fermentiq-dashboard
-    env: python
-    buildCommand: "cd dashboard && pip install -r requirements.txt"
-    startCommand: "cd dashboard && streamlit run app.py --server.port $PORT --server.address 0.0.0.0"
-    envVars:
-      - key: BACKEND_URL
-        value: "https://fermentiq-backend.onrender.com"
+# Note: The dashboard is intended to be deployed on Streamlit Cloud (Streamlit Sharing)
+# Keep the `dashboard/` folder and `dashboard/requirements.txt` as-is so Streamlit can deploy directly.

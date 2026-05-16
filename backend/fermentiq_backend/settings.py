@@ -61,11 +61,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'fermentiq_backend.wsgi.application'
 
 DATABASES = {
+    # Default: use SQLite for local development
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# If a `DATABASE_URL` environment variable is provided (e.g. Render Postgres), use it.
+# Requires `dj-database-url` in requirements.
+if os.getenv('DATABASE_URL'):
+    try:
+        import dj_database_url
+        DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'])
+    except Exception:
+        # Fall back to the default SQLite DB if parsing fails
+        pass
 
 AUTH_PASSWORD_VALIDATORS = []
 
