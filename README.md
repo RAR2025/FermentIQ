@@ -56,7 +56,7 @@ This project is set up to deploy both services on Render:
 
 The dashboard must point to the deployed backend URL through `BACKEND_URL`.
 
-See [dashboard/deployment_guide.md](dashboard/deployment_guide.md) for the exact step-by-step deployment instructions.
+
 
 ## API Reference
 
@@ -81,3 +81,7 @@ See [dashboard/deployment_guide.md](dashboard/deployment_guide.md) for the exact
 - The project can run locally without a virtual environment if you prefer using the system Python directly.
 - The dashboard depends on the backend for simulation and analysis data.
 - If you change requirements, reinstall them with `python -m pip install -r ...`.
+
+
+
+Made with ❤️ by Ruturaj Rajwade
