@@ -149,15 +149,19 @@ Base URL: `https://fermentiq.onrender.com`
 ## 📁 Project Structure
 
 ```
-fermentiq/
+FermentIQ/
 ├── backend/
-│   ├── fermentiq_backend/   # Django project settings
-│   ├── api/                 # REST endpoints, simulation & anomaly logic
+│   ├── fermentiq_backend/   # Django project settings and WSGI config
+│   ├── monitor/             # Models, API views, serializers, anomaly engine
+│   ├── db.sqlite3
 │   ├── manage.py
 │   └── requirements.txt
-└── dashboard/
-    ├── app.py               # Streamlit entrypoint
-    └── requirements.txt
+├── dashboard/
+│   ├── app.py               # Streamlit entrypoint
+│   ├── components/          # Charts, alerts, and tank cards
+│   └── requirements.txt
+├── docs/                    # Architecture notes and diagrams
+└── scripts/                 # Utility scripts such as data seeding
 ```
 
 ---
