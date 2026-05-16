@@ -18,6 +18,7 @@ Built the dashboard entrypoint and reusable components for tank cards, sensor ch
 ## Phase 5 — Documentation
 Wrote the architecture documentation and embedded the three ASCII diagrams. The docs explain the system layout, runtime flow, API surface, and environment variables.
 
-## Phase 6 — Deployment Config
-Added Render, Railway, environment, and runtime files for deployment. The runtime pin was aligned to the Python version installed on this device so the local setup reflects the host interpreter.
+## Phase 6 — Deployment Prep
+
+Added environment and runtime guidance for generic Python deployment hosts. The setup stays provider-neutral so the backend and dashboard can be deployed independently.
 

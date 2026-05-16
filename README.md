@@ -47,14 +47,29 @@ streamlit run app.py
 
 By default, the dashboard expects the backend at `http://localhost:8000`. You can override this with the `BACKEND_URL` environment variable.
 
-## Render Deployment
+## Production Deployment
 
-This project is set up to deploy both services on Render:
+The backend and dashboard are split into two deployable services and can run on any host that supports Python apps.
 
-- Backend: Django web service
-- Frontend: Streamlit web service
+Backend service:
 
-The dashboard must point to the deployed backend URL through `BACKEND_URL`.
+```bash
+cd backend
+python -m pip install -r requirements.txt
+python manage.py migrate
+python manage.py collectstatic --noinput
+gunicorn fermentiq_backend.wsgi:application --bind 0.0.0.0:$PORT
+```
+
+Dashboard service:
+
+```bash
+cd dashboard
+python -m pip install -r requirements.txt
+streamlit run app.py --server.port $PORT --server.address 0.0.0.0
+```
+
+Set `BACKEND_URL` on the dashboard service to the backend's public URL. For the backend, set `SECRET_KEY`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, and `CSRF_TRUSTED_ORIGINS` for your deployed domains.
 
 
 
@@ -74,7 +89,9 @@ The dashboard must point to the deployed backend URL through `BACKEND_URL`.
 | SECRET_KEY | dev-secret-key | Django secret key |
 | DEBUG | True | Debug mode |
 | BACKEND_URL | http://localhost:8000 | API base URL for the dashboard |
-| ALLOWED_HOSTS | * | Allowed host names for Django |
+| ALLOWED_HOSTS | localhost,127.0.0.1 | Allowed host names for Django |
+| CORS_ALLOWED_ORIGINS | http://localhost:8501 | Comma-separated trusted dashboard origins |
+| CSRF_TRUSTED_ORIGINS | http://localhost:8501 | Comma-separated trusted HTTPS origins |
 
 ## Notes
 

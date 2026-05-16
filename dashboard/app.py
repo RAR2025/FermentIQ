@@ -4,6 +4,26 @@ from pathlib import Path
 
 import requests
 
+
+def _load_local_env() -> None:
+    env_path = Path(__file__).resolve().parent.parent / ".env"
+    if not env_path.exists():
+        return
+
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key:
+            os.environ.setdefault(key, value)
+
+
+_load_local_env()
+
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000").rstrip("/")
 
 
@@ -62,7 +82,7 @@ def main():
         sensor_label = st.selectbox("Sensor selector", list(sensor_options.keys()))
         sensor_key = sensor_options[sensor_label]
 
-        if st.button("▶ Run Simulation", use_container_width=True):
+        if st.button("▶ Run Simulation", width="stretch"):
             sim_result = run_simulation(n_tanks)
             if sim_result.get("error"):
                 st.error(sim_result["error"])
@@ -70,7 +90,7 @@ def main():
                 st.session_state.simulation_data = sim_result
                 st.success(f"Generated {sim_result.get('n_tanks', n_tanks)} tanks")
 
-        if st.button("🔍 Analyze", use_container_width=True):
+        if st.button("🔍 Analyze", width="stretch"):
             analysis_result = run_analysis()
             if analysis_result.get("error"):
                 st.error(analysis_result["error"])
@@ -78,7 +98,7 @@ def main():
                 st.session_state.analysis_data = analysis_result.get("analysis", [])
                 st.success("Analysis complete")
 
-        if st.button("🔄 Refresh Results", use_container_width=True):
+        if st.button("🔄 Refresh Results", width="stretch"):
             try:
                 st.rerun()
             except Exception:
@@ -127,7 +147,7 @@ def main():
                 ideal = ideals.get(sensor_key, []) or []
                 if readings and ideal:
                     fig = plot_sensor_vs_ideal(tank_id, sensor_key, readings, ideal, timestamps, tolerance)
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
         else:
             st.info("Run a simulation first to view sensor charts.")
 
@@ -137,8 +157,8 @@ def main():
         df = pd.DataFrame(analysis_rows if isinstance(analysis_rows, list) else [])
         if not df.empty:
             df = df.sort_values(by=["tank_id", "sensor"], ascending=True)
-            st.dataframe(df, use_container_width=True, hide_index=True)
-            st.plotly_chart(plot_status_summary(df.to_dict(orient="records")), use_container_width=True)
+            st.dataframe(df, width="stretch", hide_index=True)
+            st.plotly_chart(plot_status_summary(df.to_dict(orient="records")), width="stretch")
         else:
             st.info("No analysis records yet.")
 
