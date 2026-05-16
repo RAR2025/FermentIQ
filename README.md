@@ -2,6 +2,11 @@
 
 FermentIQ is a two-service fermentation monitoring demo built with Python. The backend generates synthetic sensor readings, stores them in SQLite, and runs anomaly detection against an ideal fermentation signature. The frontend is a Streamlit dashboard that fetches the backend data and turns it into charts, tank status cards, alerts, and analysis tables.
 
+## Live Demo
+
+- Frontend: https://rar-fermentiq.streamlit.app/
+- Backend API: https://fermentiq.onrender.com
+
 ## What this project includes
 
 - Synthetic fermentation data generation for temperature, pH, and dissolved oxygen
@@ -49,9 +54,14 @@ By default, the dashboard expects the backend at `http://localhost:8000`. You ca
 
 ## Production Deployment
 
-The backend and dashboard are split into two deployable services and can run on any host that supports Python apps.
+FermentIQ is deployed as two separate services:
 
-Backend service:
+- Frontend dashboard: https://rar-fermentiq.streamlit.app/
+- Backend API: https://fermentiq.onrender.com
+
+The dashboard should use the Render backend URL via `BACKEND_URL`.
+
+Backend service deployment example:
 
 ```bash
 cd backend
@@ -61,7 +71,7 @@ python manage.py collectstatic --noinput
 gunicorn fermentiq_backend.wsgi:application --bind 0.0.0.0:$PORT
 ```
 
-Dashboard service:
+Dashboard service deployment example:
 
 ```bash
 cd dashboard
@@ -69,7 +79,12 @@ python -m pip install -r requirements.txt
 streamlit run app.py --server.port $PORT --server.address 0.0.0.0
 ```
 
-Set `BACKEND_URL` on the dashboard service to the backend's public URL. For the backend, set `SECRET_KEY`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, and `CSRF_TRUSTED_ORIGINS` for your deployed domains.
+Recommended deployment environment variables:
+
+- `BACKEND_URL=https://fermentiq.onrender.com`
+- `ALLOWED_HOSTS=fermentiq.onrender.com,localhost,127.0.0.1`
+- `CORS_ALLOWED_ORIGINS=https://rar-fermentiq.streamlit.app`
+- `CSRF_TRUSTED_ORIGINS=https://rar-fermentiq.streamlit.app`
 
 
 
